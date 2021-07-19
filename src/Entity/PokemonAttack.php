@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\PokemonAttackRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PokemonAttackRepository::class)
@@ -12,31 +14,29 @@ class PokemonAttack
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Pokemon::class, inversedBy="attacks")
      * @ORM\JoinColumn(nullable=false)
      */
     private $pokemon;
 
     /**
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity=Attack::class, inversedBy="pokemons")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"pokemon:get"})
      */
     private $attack;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"pokemon:get"})
      */
     private $level;
 
-    public function getId(): ?int
+    public function __construct(Pokemon $pokemon, Attack $attack)
     {
-        return $this->id;
+        $this->pokemon = $pokemon;
+        $this->attack = $attack;
     }
 
     public function getPokemon(): ?Pokemon
@@ -44,23 +44,9 @@ class PokemonAttack
         return $this->pokemon;
     }
 
-    public function setPokemon(?Pokemon $pokemon): self
-    {
-        $this->pokemon = $pokemon;
-
-        return $this;
-    }
-
     public function getAttack(): ?Attack
     {
         return $this->attack;
-    }
-
-    public function setAttack(?Attack $attack): self
-    {
-        $this->attack = $attack;
-
-        return $this;
     }
 
     public function getLevel(): ?int

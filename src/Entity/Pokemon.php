@@ -7,9 +7,15 @@ use App\Repository\PokemonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={
+ *          "groups"={"pokemon:get"}
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=PokemonRepository::class)
  */
 class Pokemon
@@ -18,46 +24,55 @@ class Pokemon
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      * @ORM\Column(type="integer")
+     * @Groups({"pokemon:get"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"pokemon:get"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"pokemon:get"})
      */
     private $height;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"pokemon:get"})
      */
     private $weight;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"pokemon:get"})
      */
     private $baseExperience;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"pokemon:get"})
      */
     private $pokedexOrder;
 
     /**
      * @ORM\ManyToMany(targetEntity=Type::class, inversedBy="pokemons")
+     * @Groups({"pokemon:get"})
      */
     private $types;
 
     /**
      * @ORM\OneToMany(targetEntity=PokemonAttack::class, mappedBy="pokemon", orphanRemoval=true)
+     * @Groups({"pokemon:get"})
      */
     private $attacks;
 
-    public function __construct()
+    public function __construct(int $id)
     {
+        $this->id = $id;
         $this->types = new ArrayCollection();
         $this->attacks = new ArrayCollection();
     }
@@ -65,12 +80,6 @@ class Pokemon
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-        return $this;
     }
 
     public function getName(): ?string
