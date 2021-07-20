@@ -4,10 +4,13 @@ namespace App\Entity;
 
 use App\Repository\PokemonAttackRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
+ * This class has a composite primary key. 2 attributes (pokemon and attack) are used to create its primary key (@ORM\Id).
+ * @see https://www.javatpoint.com/sql-composite-key
+ * @see https://www.doctrine-project.org/projects/doctrine-orm/en/2.9/tutorials/composite-primary-keys.html
+ *
  * @ORM\Entity(repositoryClass=PokemonAttackRepository::class)
  */
 class PokemonAttack
@@ -37,6 +40,8 @@ class PokemonAttack
     {
         $this->pokemon = $pokemon;
         $this->attack = $attack;
+        $pokemon->addAttack($this);
+        $attack->addPokemon($this);
     }
 
     public function getPokemon(): ?Pokemon

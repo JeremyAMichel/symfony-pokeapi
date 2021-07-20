@@ -8,13 +8,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ApiResource(
- *      normalizationContext={
+ *     normalizationContext={
  *          "groups"={"type:get"}
- *      }
+ *     }
  * )
  * @ORM\Entity(repositoryClass=TypeRepository::class)
  */
@@ -30,7 +29,6 @@ class Type
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"type:get"})
      */
     private $pokeapiId;
 
@@ -42,13 +40,11 @@ class Type
 
     /**
      * @ORM\ManyToMany(targetEntity=Pokemon::class, mappedBy="types")
-     * @MaxDepth(1)
      */
     private $pokemons;
 
     /**
      * @ORM\OneToMany(targetEntity=Attack::class, mappedBy="type")
-     * @MaxDepth(1)
      */
     private $attacks;
 

@@ -8,13 +8,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ApiResource(
- *      normalizationContext={
+ *     normalizationContext={
  *          "groups"={"attack:get"}
- *      }
+ *     }
  * )
  * @ORM\Entity(repositoryClass=AttackRepository::class)
  */
@@ -24,13 +23,12 @@ class Attack
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"attack:get"})
+     * @Groups({"attack:get", "pokemon:get"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"attack:get"})
      */
     private $pokeapiId;
 
@@ -164,7 +162,6 @@ class Attack
     {
         if (!$this->pokemons->contains($pokemon)) {
             $this->pokemons[] = $pokemon;
-            // $pokemon->setAttack($this);
         }
 
         return $this;
@@ -172,12 +169,7 @@ class Attack
 
     public function removePokemon(PokemonAttack $pokemon): self
     {
-        if ($this->pokemons->removeElement($pokemon)) {
-            // set the owning side to null (unless already changed)
-            if ($pokemon->getAttack() === $this) {
-                // $pokemon->setAttack(null);
-            }
-        }
+        $this->pokemons->removeElement($pokemon);
 
         return $this;
     }
